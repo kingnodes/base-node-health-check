@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const Web3 = require('web3');
+const { Web3 } = require('web3');
 const winston = require('winston');
 
 // Configure logger
@@ -25,9 +25,7 @@ const config = {
 };
 
 // Initialize Web3
-const web3 = new Web3(new Web3.providers.HttpProvider(config.rpcUrl, {
-  timeout: config.timeoutMs
-}));
+const web3 = new Web3(config.rpcUrl, { timeout: config.timeoutMs });
 
 // Health check functions
 const healthChecks = {
