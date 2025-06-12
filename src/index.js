@@ -32,7 +32,7 @@ const healthChecks = {
   async rpc() {
     const blockNumber = await web3.eth.getBlockNumber();
     if (!blockNumber) throw new Error('Invalid block number');
-    return { status: 'ok', value: blockNumber };
+    return { status: 'ok', value: Number(blockNumber) };
   },
 
   async sync() {
@@ -45,18 +45,19 @@ const healthChecks = {
 
   async peers() {
     const peerCount = await web3.eth.net.getPeerCount();
-    if (peerCount < config.peerThreshold) {
+    const peerCountNum = Number(peerCount);
+    if (peerCountNum < config.peerThreshold) {
       return {
         status: 'fail',
-        error: `Peer count ${peerCount} below threshold ${config.peerThreshold}`
+        error: `Peer count ${peerCountNum} below threshold ${config.peerThreshold}`
       };
     }
-    return { status: 'ok', value: peerCount };
+    return { status: 'ok', value: peerCountNum };
   },
 
   async freshness() {
     const latestBlock = await web3.eth.getBlock('latest');
-    const blockTime = new Date(latestBlock.timestamp * 1000);
+    const blockTime = new Date(Number(latestBlock.timestamp) * 1000);
     const now = new Date();
     const timeDiff = Math.abs(now - blockTime) / 1000;
     
