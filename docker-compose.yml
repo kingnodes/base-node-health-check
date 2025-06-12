@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  base-node:
+    image: optimism-base:latest  # Replace with your actual Base node image
+    networks:
+      - base-network
+    # Add your Base node configuration here
+
+  health-check:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - RPC_URL=http://base-node:9545
+      - PEER_THRESHOLD=10
+      - MAX_FRESHNESS_SEC=15
+      - TIMEOUT_MS=5000
+      - PORT=8080
+    ports:
+      - "8080:8080"
+    networks:
+      - base-network
+    depends_on:
+      - base-node
+
+networks:
+  base-network:
+    driver: bridge 
